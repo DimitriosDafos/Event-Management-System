@@ -1,0 +1,81 @@
+<?php
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PartyController;
+use App\Http\Controllers\BarShiftController;
+use App\Http\Controllers\DoorController;
+use App\Http\Controllers\DjController;
+use App\Http\Controllers\TodoController;
+use App\Http\Controllers\FinanceController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\PublicController;
+
+// Öffentliche Seite (kein Login)
+Route::get('/', [PublicController::class, 'index'])->name('public.index');
+Route::get('/party/{id}', [PublicController::class, 'party'])->name('public.party');
+
+// Auth
+Route::middleware('guest')->group(function () {
+    Route::get('/login',  [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+});
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+
+// Intern (Login erforderlich)
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Party-Liste
+    Route::get('/partys', [PartyController::class, 'index'])->name('parties.index');
+
+    // Spezifische Routes VOR dem Wildcard {id} registrieren
+    Route::get('/partys/neu', [PartyController::class, 'create'])->middleware('admin')->name('parties.create');
+    Route::post('/partys',    [PartyController::class, 'store'])->middleware('admin')->name('parties.store');
+
+    // Party-Detail (Wildcard nach den spezifischen Routes)
+    Route::get('/partys/{id}', [PartyController::class, 'show'])->name('parties.show');
+
+    // Party bearbeiten (/{id}/... hat keinen Konflikt mehr)
+    Route::get('/partys/{id}/bearbeiten', [PartyController::class, 'edit'])->middleware('admin')->name('parties.edit');
+    Route::patch('/partys/{id}',          [PartyController::class, 'update'])->middleware('admin')->name('parties.update');
+    Route::patch('/partys/{id}/status',   [PartyController::class, 'updateStatus'])->middleware('admin')->name('parties.status');
+
+    // Bar-Dienstplan (Mitglieder können sich eintragen)
+    Route::post('/partys/{id}/bar',              [BarShiftController::class, 'store'])->name('bar.store');
+    Route::delete('/partys/{id}/bar/{shiftId}',  [BarShiftController::class, 'destroy'])->name('bar.destroy');
+
+    // ToDos
+    Route::post('/partys/{id}/todos',                    [TodoController::class, 'store'])->name('todos.store');
+    Route::patch('/partys/{id}/todos/{todoId}/done',     [TodoController::class, 'markDone'])->name('todos.done');
+    Route::patch('/partys/{id}/todos/{todoId}/kosten',   [TodoController::class, 'updateCosts'])->name('todos.costs');
+    Route::patch('/partys/{id}/todos/{todoId}',          [TodoController::class, 'adminUpdate'])->middleware('admin')->name('todos.admin_update');
+    Route::delete('/partys/{id}/todos/{todoId}',         [TodoController::class, 'destroy'])->name('todos.destroy');
+
+    // Marketing + Admin
+    Route::middleware('marketing')->group(function () {
+        Route::post('/partys/{id}/dj',            [DjController::class, 'store'])->name('dj.store');
+        Route::delete('/partys/{id}/dj/{djId}',   [DjController::class, 'destroy'])->name('dj.destroy');
+        Route::patch('/partys/{id}/beschreibung',  [PartyController::class, 'updateDescription'])->name('parties.description');
+        Route::post('/partys/{id}/flyer',          [PartyController::class, 'uploadFlyer'])->name('parties.flyer');
+    });
+
+    // Admin: Einlass + Einnahmen
+    Route::middleware('admin')->group(function () {
+        Route::post('/partys/{id}/einlass',           [DoorController::class, 'store'])->name('door.store');
+        Route::delete('/partys/{id}/einlass/{dId}',   [DoorController::class, 'destroy'])->name('door.destroy');
+        Route::post('/partys/{id}/einnahmen',         [FinanceController::class, 'store'])->name('income.store');
+        Route::delete('/partys/{id}/einnahmen/{iId}', [FinanceController::class, 'destroy'])->name('income.destroy');
+    });
+
+    // Admin-Bereich
+    Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/',                              [AdminController::class, 'dashboard'])->name('dashboard');
+        Route::get('/mitglieder',                    [AdminController::class, 'users'])->name('users');
+        Route::get('/mitglieder/neu',                [AdminController::class, 'createUser'])->name('users.create');
+        Route::post('/mitglieder',                   [AdminController::class, 'storeUser'])->name('users.store');
+        Route::get('/mitglieder/{id}/bearbeiten',    [AdminController::class, 'editUser'])->name('users.edit');
+        Route::patch('/mitglieder/{id}',             [AdminController::class, 'updateUser'])->name('users.update');
+        Route::delete('/mitglieder/{id}',            [AdminController::class, 'deleteUser'])->name('users.delete');
+    });
+});

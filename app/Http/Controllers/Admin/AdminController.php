@@ -31,9 +31,15 @@ class AdminController extends Controller
             'name'     => 'required|string|max:100',
             'username' => 'required|string|max:50|unique:users|alpha_dash',
             'password' => 'required|string|min:6',
-            'role'     => 'required|in:admin,marketing,member',
+            'roles'    => 'required|array|min:1',
+            'roles.*'  => 'in:admin,marketing,member,dj',
         ]);
-        User::create(array_merge($data, ['password' => Hash::make($data['password'])]));
+        User::create([
+            'name'     => $data['name'],
+            'username' => $data['username'],
+            'password' => Hash::make($data['password']),
+            'role'     => $request->input('roles', ['member']),
+        ]);
         return redirect()->route('admin.users')->with('success', 'Benutzer erstellt.');
     }
 
@@ -49,14 +55,21 @@ class AdminController extends Controller
         $data = $request->validate([
             'name'     => 'required|string|max:100',
             'username' => 'required|string|max:50|alpha_dash|unique:users,username,'.$id,
-            'role'     => 'required|in:admin,marketing,member',
+            'roles'    => 'required|array|min:1',
+            'roles.*'  => 'in:admin,marketing,member,dj',
             'active'   => 'boolean',
             'password' => 'nullable|string|min:6',
         ]);
-        if (empty($data['password'])) unset($data['password']);
-        else $data['password'] = Hash::make($data['password']);
-        $data['active'] = $request->boolean('active');
-        $user->update($data);
+        $update = [
+            'name'     => $data['name'],
+            'username' => $data['username'],
+            'role'     => $request->input('roles', ['member']),
+            'active'   => $request->boolean('active'),
+        ];
+        if (!empty($data['password'])) {
+            $update['password'] = Hash::make($data['password']);
+        }
+        $user->update($update);
         return redirect()->route('admin.users')->with('success', 'Benutzer aktualisiert.');
     }
 

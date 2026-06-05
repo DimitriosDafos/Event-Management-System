@@ -36,33 +36,37 @@ Route::middleware('auth')->group(function () {
     // Party-Detail (Wildcard nach den spezifischen Routes)
     Route::get('/partys/{id}', [PartyController::class, 'show'])->name('parties.show');
 
-    // Party bearbeiten (/{id}/... hat keinen Konflikt mehr)
+    // Party bearbeiten
     Route::get('/partys/{id}/bearbeiten', [PartyController::class, 'edit'])->middleware('admin')->name('parties.edit');
     Route::patch('/partys/{id}',          [PartyController::class, 'update'])->middleware('admin')->name('parties.update');
     Route::patch('/partys/{id}/status',   [PartyController::class, 'updateStatus'])->middleware('admin')->name('parties.status');
 
-    // Bar-Dienstplan (Mitglieder können sich eintragen)
+    // Bar-Dienstplan + Einlass (alle Mitglieder)
     Route::post('/partys/{id}/bar',              [BarShiftController::class, 'store'])->name('bar.store');
     Route::delete('/partys/{id}/bar/{shiftId}',  [BarShiftController::class, 'destroy'])->name('bar.destroy');
+    Route::post('/partys/{id}/einlass',          [DoorController::class, 'store'])->name('door.store');
 
     // ToDos
-    Route::post('/partys/{id}/todos',                    [TodoController::class, 'store'])->name('todos.store');
-    Route::patch('/partys/{id}/todos/{todoId}/done',     [TodoController::class, 'markDone'])->name('todos.done');
-    Route::patch('/partys/{id}/todos/{todoId}/kosten',   [TodoController::class, 'updateCosts'])->name('todos.costs');
-    Route::patch('/partys/{id}/todos/{todoId}',          [TodoController::class, 'adminUpdate'])->middleware('admin')->name('todos.admin_update');
-    Route::delete('/partys/{id}/todos/{todoId}',         [TodoController::class, 'destroy'])->name('todos.destroy');
+    Route::post('/partys/{id}/todos',                  [TodoController::class, 'store'])->name('todos.store');
+    Route::patch('/partys/{id}/todos/{todoId}/done',   [TodoController::class, 'markDone'])->name('todos.done');
+    Route::patch('/partys/{id}/todos/{todoId}/kosten', [TodoController::class, 'updateCosts'])->name('todos.costs');
+    Route::patch('/partys/{id}/todos/{todoId}',        [TodoController::class, 'adminUpdate'])->middleware('admin')->name('todos.admin_update');
+    Route::delete('/partys/{id}/todos/{todoId}',       [TodoController::class, 'destroy'])->middleware('admin')->name('todos.destroy');
+
+    // DJ + Marketing + Admin (DJ-Lineup)
+    Route::middleware('dj')->group(function () {
+        Route::post('/partys/{id}/dj',           [DjController::class, 'store'])->name('dj.store');
+        Route::delete('/partys/{id}/dj/{djId}',  [DjController::class, 'destroy'])->name('dj.destroy');
+    });
 
     // Marketing + Admin
     Route::middleware('marketing')->group(function () {
-        Route::post('/partys/{id}/dj',            [DjController::class, 'store'])->name('dj.store');
-        Route::delete('/partys/{id}/dj/{djId}',   [DjController::class, 'destroy'])->name('dj.destroy');
-        Route::patch('/partys/{id}/beschreibung',  [PartyController::class, 'updateDescription'])->name('parties.description');
-        Route::post('/partys/{id}/flyer',          [PartyController::class, 'uploadFlyer'])->name('parties.flyer');
+        Route::patch('/partys/{id}/beschreibung', [PartyController::class, 'updateDescription'])->name('parties.description');
+        Route::post('/partys/{id}/flyer',         [PartyController::class, 'uploadFlyer'])->name('parties.flyer');
     });
 
-    // Admin: Einlass + Einnahmen
+    // Admin: Einlass löschen + Einnahmen
     Route::middleware('admin')->group(function () {
-        Route::post('/partys/{id}/einlass',           [DoorController::class, 'store'])->name('door.store');
         Route::delete('/partys/{id}/einlass/{dId}',   [DoorController::class, 'destroy'])->name('door.destroy');
         Route::post('/partys/{id}/einnahmen',         [FinanceController::class, 'store'])->name('income.store');
         Route::delete('/partys/{id}/einnahmen/{iId}', [FinanceController::class, 'destroy'])->name('income.destroy');

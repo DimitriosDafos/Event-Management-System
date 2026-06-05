@@ -108,7 +108,7 @@
         @endif
         <span style="color:var(--border);">|</span>
         <span class="text-muted" style="font-size:.75rem;">{{ auth()->user()->name }}
-            <span class="badge badge-muted ml-1">{{ auth()->user()->role }}</span>
+            <span class="badge badge-muted ml-1">{{ auth()->user()->primaryRole() }}</span>
         </span>
         <form method="POST" action="{{ route('logout') }}" class="inline">
             @csrf

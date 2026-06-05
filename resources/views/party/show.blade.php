@@ -151,12 +151,15 @@
             <table class="data-table" style="margin-bottom:1rem;">
                 <thead>
                     <tr>
-                        <th>Bereich</th><th>Von</th><th>Bis</th><th>Wer</th><th></th>
+                        <th style="width:70px;">Schicht</th><th>Bereich</th><th>Von</th><th>Bis</th><th>Wer</th><th></th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($party->barShifts as $shift)
                         <tr>
+                            <td>
+                                <span class="badge badge-muted" style="font-size:.7rem;">{{ $shift->sort_order }}</span>
+                            </td>
                             <td style="font-weight:500;">{{ $shift->area }}</td>
                             <td>{{ $shift->from }}</td>
                             <td>{{ $shift->till }}</td>
@@ -181,13 +184,33 @@
 
         @if(!$party->isPast())
             <div style="border-top:1px solid var(--border); padding-top:.9rem;">
-                <p style="font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin-bottom:.6rem;">Schicht eintragen</p>
+                <p style="font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin-bottom:.6rem;">
+                    {{ auth()->user()->isAdmin() ? 'Schicht zuweisen' : 'Schicht eintragen' }}
+                </p>
                 <form method="POST" action="{{ route('bar.store', $party->id) }}" style="display:flex; gap:.6rem; flex-wrap:wrap; align-items:flex-end;">
                     @csrf
                     <div>
+                        <label class="form-label">Schicht-Nr.</label>
+                        <input type="number" name="sort_order" min="1" max="99" value="1" required
+                               style="background:var(--bg); border:1px solid var(--border); color:var(--text); padding:.4rem .65rem; border-radius:.25rem; font-size:.82rem; width:70px;"
+                               onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'"
+                               title="Schicht 1 = früh, Schicht 2 = spät, Schicht 3 = nach Mitternacht...">
+                    </div>
+                    @if(auth()->user()->isAdmin())
+                        <div>
+                            <label class="form-label">Mitglied</label>
+                            <select name="user_id" required style="background:var(--bg); border:1px solid var(--border); color:var(--text); padding:.4rem .65rem; border-radius:.25rem; font-size:.82rem;">
+                                <option value="">— wählen —</option>
+                                @foreach($users as $u)
+                                    <option value="{{ $u->id }}">{{ $u->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
+                    <div>
                         <label class="form-label">Bereich</label>
                         <input type="text" name="area" placeholder="z.B. Theke, Ausgabe..." required
-                               style="background:var(--bg); border:1px solid var(--border); color:var(--text); padding:.4rem .65rem; border-radius:.25rem; font-size:.82rem; width:160px;"
+                               style="background:var(--bg); border:1px solid var(--border); color:var(--text); padding:.4rem .65rem; border-radius:.25rem; font-size:.82rem; width:140px;"
                                onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'">
                     </div>
                     <div>
@@ -221,11 +244,12 @@
         @if($party->doorAssignments->count())
             <table class="data-table" style="margin-bottom:1rem;">
                 <thead>
-                    <tr><th>Von</th><th>Bis</th><th>Wer</th><th></th></tr>
+                    <tr><th style="width:70px;">Schicht</th><th>Von</th><th>Bis</th><th>Wer</th><th></th></tr>
                 </thead>
                 <tbody>
                     @foreach($party->doorAssignments as $door)
                         <tr>
+                            <td><span class="badge badge-muted" style="font-size:.7rem;">{{ $door->sort_order }}</span></td>
                             <td>{{ $door->from }}</td>
                             <td>{{ $door->till }}</td>
                             <td>{{ $door->user->name ?? '—' }}</td>
@@ -247,11 +271,21 @@
             <p class="text-muted" style="font-size:.82rem; margin-bottom:.9rem;">Noch keine Einteilung.</p>
         @endif
 
-        @if(auth()->user()->isAdmin() && !$party->isPast())
+        @if(!$party->isPast())
             <div style="border-top:1px solid var(--border); padding-top:.9rem;">
                 <p style="font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin-bottom:.6rem;">Einlass eintragen</p>
                 <form method="POST" action="{{ route('door.store', $party->id) }}" style="display:flex; gap:.6rem; flex-wrap:wrap; align-items:flex-end;">
                     @csrf
+                    @if(auth()->user()->isAdmin())
+                        <div>
+                            <label class="form-label">Schicht-Nr.</label>
+                            <input type="number" name="sort_order" min="1" max="99" value="1" required
+                                   style="background:var(--bg); border:1px solid var(--border); color:var(--text); padding:.4rem .65rem; border-radius:.25rem; font-size:.82rem; width:70px;"
+                                   onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'">
+                        </div>
+                    @else
+                        <input type="hidden" name="sort_order" value="1">
+                    @endif
                     <div>
                         <label class="form-label">Mitglied</label>
                         <select name="user_id" required style="background:var(--bg); border:1px solid var(--border); color:var(--text); padding:.4rem .65rem; border-radius:.25rem; font-size:.82rem;">
@@ -292,11 +326,12 @@
         @if($party->djLineup->count())
             <table class="data-table" style="margin-bottom:1rem;">
                 <thead>
-                    <tr><th>DJ Name</th><th>Von</th><th>Bis</th><th>Stil</th><th>Website</th><th></th></tr>
+                    <tr><th style="width:70px;">Slot</th><th>DJ Name</th><th>Von</th><th>Bis</th><th>Stil</th><th>Website</th><th></th></tr>
                 </thead>
                 <tbody>
                     @foreach($party->djLineup as $dj)
                         <tr>
+                            <td><span class="badge badge-muted" style="font-size:.7rem;">{{ $dj->sort_order }}</span></td>
                             <td style="font-weight:500; color:var(--gold);">{{ $dj->dj_name }}</td>
                             <td>{{ $dj->from }}</td>
                             <td>{{ $dj->till }}</td>
@@ -309,7 +344,7 @@
                                 @endif
                             </td>
                             <td style="text-align:right;">
-                                @if(auth()->user()->isMarketing())
+                                @if(auth()->user()->isDj())
                                     <form method="POST" action="{{ route('dj.destroy', [$party->id, $dj->id]) }}" style="display:inline;">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="btn btn-ghost btn-xs"
@@ -326,11 +361,18 @@
             <p class="text-muted" style="font-size:.82rem; margin-bottom:.9rem;">Noch kein DJ-Lineup eingetragen.</p>
         @endif
 
-        @if(auth()->user()->isMarketing() && !$party->isPast())
+        @if(auth()->user()->isDj() && !$party->isPast())
             <div style="border-top:1px solid var(--border); padding-top:.9rem;">
                 <p style="font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin-bottom:.6rem;">DJ hinzufügen</p>
                 <form method="POST" action="{{ route('dj.store', $party->id) }}" style="display:flex; gap:.6rem; flex-wrap:wrap; align-items:flex-end;">
                     @csrf
+                    <div>
+                        <label class="form-label">Slot-Nr.</label>
+                        <input type="number" name="sort_order" min="1" max="99" value="1" required
+                               style="background:var(--bg); border:1px solid var(--border); color:var(--text); padding:.4rem .65rem; border-radius:.25rem; font-size:.82rem; width:70px;"
+                               onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'"
+                               title="1 = erster DJ, 2 = zweiter DJ usw. — bestimmt die Reihenfolge">
+                    </div>
                     <div>
                         <label class="form-label">DJ-Name</label>
                         <input type="text" name="dj_name" required
@@ -395,13 +437,13 @@
                             <td style="font-size:.78rem;">{{ $todo->due_date ? $todo->due_date->format('d.m.') : '—' }}</td>
                             <td style="font-size:.78rem;">{{ $todo->due_time ?? '—' }}</td>
                             <td style="{{ $todo->done ? 'text-decoration:line-through;' : '' }}">{{ $todo->what }}</td>
-                            <td>{{ $todo->assignedTo->name ?? '—' }}</td>
+                            <td>{{ $todo->users->pluck('name')->join(', ') ?: '—' }}</td>
                             <td>
                                 @if($todo->costs > 0)
                                     <span class="text-gold">{{ number_format($todo->costs, 2, ',', '.') }} €</span>
                                 @else
                                     {{-- Kosten eintragen (eigene todos oder admin) --}}
-                                    @if($todo->assigned_to === auth()->id() || auth()->user()->isAdmin())
+                                    @if($todo->isAssigned(auth()->id()) || auth()->user()->isAdmin())
                                         <form method="POST" action="{{ route('todos.costs', [$party->id, $todo->id]) }}" style="display:flex; gap:.3rem;">
                                             @csrf @method('PATCH')
                                             <input type="number" name="costs" step="0.01" min="0" placeholder="0,00"
@@ -415,7 +457,7 @@
                                 @endif
                             </td>
                             <td>
-                                @if($todo->assigned_to === auth()->id() || auth()->user()->isAdmin())
+                                @if($todo->isAssigned(auth()->id()) || auth()->user()->isAdmin())
                                     <form method="POST" action="{{ route('todos.done', [$party->id, $todo->id]) }}" style="display:inline;">
                                         @csrf @method('PATCH')
                                         <button type="submit" class="btn btn-sm"
@@ -456,21 +498,23 @@
                                                                style="background:var(--bg); border:1px solid var(--border); color:var(--text); padding:.35rem .5rem; border-radius:.2rem; font-size:.78rem; width:100%;">
                                                     </div>
                                                 </div>
-                                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:.4rem; margin-bottom:.5rem;">
-                                                    <div>
-                                                        <label class="form-label">Wer</label>
-                                                        <select name="assigned_to" style="background:var(--bg); border:1px solid var(--border); color:var(--text); padding:.35rem .5rem; border-radius:.2rem; font-size:.78rem; width:100%;">
-                                                            <option value="">— niemand —</option>
-                                                            @foreach($users as $u)
-                                                                <option value="{{ $u->id }}" {{ $todo->assigned_to == $u->id ? 'selected' : '' }}>{{ $u->name }}</option>
-                                                            @endforeach
-                                                        </select>
+                                                <div style="margin-bottom:.5rem;">
+                                                    <label class="form-label">Wer (mehrere möglich)</label>
+                                                    <div style="display:flex; flex-direction:column; gap:.2rem; max-height:100px; overflow-y:auto; padding:.3rem; background:var(--bg); border:1px solid var(--border); border-radius:.2rem;">
+                                                        @foreach($users as $u)
+                                                            <label style="display:flex; align-items:center; gap:.4rem; font-size:.78rem; color:var(--text); cursor:pointer;">
+                                                                <input type="checkbox" name="user_ids[]" value="{{ $u->id }}"
+                                                                       {{ $todo->users->contains($u->id) ? 'checked' : '' }}
+                                                                       style="accent-color:var(--gold);">
+                                                                {{ $u->name }}
+                                                            </label>
+                                                        @endforeach
                                                     </div>
-                                                    <div>
-                                                        <label class="form-label">Kosten (€)</label>
-                                                        <input type="number" name="costs" step="0.01" min="0" value="{{ $todo->costs }}"
-                                                               style="background:var(--bg); border:1px solid var(--border); color:var(--text); padding:.35rem .5rem; border-radius:.2rem; font-size:.78rem; width:100%;">
-                                                    </div>
+                                                </div>
+                                                <div style="margin-bottom:.5rem;">
+                                                    <label class="form-label">Kosten (€)</label>
+                                                    <input type="number" name="costs" step="0.01" min="0" value="{{ $todo->costs }}"
+                                                           style="background:var(--bg); border:1px solid var(--border); color:var(--text); padding:.35rem .5rem; border-radius:.2rem; font-size:.78rem; width:100%;">
                                                 </div>
                                                 <div style="display:flex; gap:.4rem;">
                                                     <button type="submit" class="btn btn-gold btn-xs">Speichern</button>
@@ -494,7 +538,7 @@
             <p class="text-muted" style="font-size:.82rem; margin-bottom:.9rem;">Noch keine ToDos.</p>
         @endif
 
-        @if(auth()->user()->isAdmin())
+        @if(true)
             <div style="border-top:1px solid var(--border); padding-top:.9rem;">
                 <p style="font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin-bottom:.6rem;">ToDo hinzufügen</p>
                 <form method="POST" action="{{ route('todos.store', $party->id) }}" style="display:flex; gap:.6rem; flex-wrap:wrap; align-items:flex-end;">
@@ -516,14 +560,15 @@
                                style="background:var(--bg); border:1px solid var(--border); color:var(--text); padding:.4rem .65rem; border-radius:.25rem; font-size:.82rem;">
                     </div>
                     <div>
-                        <label class="form-label">Wer</label>
-                        <select name="assigned_to"
-                                style="background:var(--bg); border:1px solid var(--border); color:var(--text); padding:.4rem .65rem; border-radius:.25rem; font-size:.82rem;">
-                            <option value="">— niemand —</option>
+                        <label class="form-label">Wer (mehrere möglich)</label>
+                        <div style="display:flex; flex-direction:column; gap:.25rem; padding:.35rem .5rem; background:var(--bg); border:1px solid var(--border); border-radius:.25rem; max-height:110px; overflow-y:auto; min-width:140px;">
                             @foreach($users as $u)
-                                <option value="{{ $u->id }}">{{ $u->name }}</option>
+                                <label style="display:flex; align-items:center; gap:.4rem; font-size:.82rem; color:var(--text); cursor:pointer; white-space:nowrap;">
+                                    <input type="checkbox" name="user_ids[]" value="{{ $u->id }}" style="accent-color:var(--gold);">
+                                    {{ $u->name }}
+                                </label>
                             @endforeach
-                        </select>
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-gold btn-sm">Hinzufügen</button>
                 </form>
@@ -562,7 +607,7 @@
                             @foreach($party->todos->where('costs', '>', 0) as $todo)
                                 <tr>
                                     <td style="font-size:.78rem;">{{ $todo->what }}</td>
-                                    <td style="font-size:.78rem;">{{ $todo->assignedTo->name ?? '—' }}</td>
+                                    <td style="font-size:.78rem;">{{ $todo->users->pluck('name')->join(', ') ?: '—' }}</td>
                                     <td style="color:var(--gold); font-size:.82rem;">{{ number_format($todo->costs, 2, ',', '.') }} €</td>
                                 </tr>
                             @endforeach

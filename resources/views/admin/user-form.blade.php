@@ -30,12 +30,31 @@
             </div>
 
             <div class="form-group">
-                <label class="form-label">Rolle *</label>
-                <select name="role" class="form-select" required>
-                    <option value="member"    {{ old('role', $user->role ?? '') === 'member'    ? 'selected' : '' }}>Mitglied</option>
-                    <option value="marketing" {{ old('role', $user->role ?? '') === 'marketing' ? 'selected' : '' }}>Marketing</option>
-                    <option value="admin"     {{ old('role', $user->role ?? '') === 'admin'     ? 'selected' : '' }}>Admin</option>
-                </select>
+                <label class="form-label">Gruppen / Rollen *</label>
+                <div style="background:var(--bg); border:1px solid var(--border); border-radius:.25rem; padding:.6rem .75rem; display:flex; flex-direction:column; gap:.55rem;">
+                    @php
+                        $currentRoles = old('roles', $user ? (array)$user->role : ['member']);
+                        $roleOptions  = [
+                            'admin'     => ['label' => 'Admin',     'desc' => 'Volle Kontrolle über alles'],
+                            'marketing' => ['label' => 'Marketing', 'desc' => 'Flyer, Beschreibung, DJs, Einlass'],
+                            'dj'        => ['label' => 'DJ',        'desc' => 'DJ-Lineup eintragen'],
+                            'member'    => ['label' => 'Mitglied',  'desc' => 'Bar, Einlass, ToDos'],
+                        ];
+                    @endphp
+                    @foreach($roleOptions as $value => $opt)
+                        <label style="display:flex; align-items:center; gap:.75rem; cursor:pointer; padding:.2rem 0;">
+                            <input type="checkbox" name="roles[]" value="{{ $value }}"
+                                   style="width:1rem; height:1rem; accent-color:var(--gold); flex-shrink:0;"
+                                   {{ in_array($value, $currentRoles) ? 'checked' : '' }}>
+                            <div>
+                                <span style="font-size:.85rem; color:var(--text);">{{ $opt['label'] }}</span>
+                                <span class="text-muted" style="font-size:.72rem; margin-left:.4rem;">— {{ $opt['desc'] }}</span>
+                            </div>
+                        </label>
+                    @endforeach
+                </div>
+                <span class="text-muted" style="font-size:.72rem; margin-top:.3rem; display:block;">Mehrere Gruppen möglich. Höchste Rechte gelten.</span>
+                @error('roles') <span style="color:#c97070; font-size:.75rem;">{{ $message }}</span> @enderror
             </div>
 
             <div class="form-group">

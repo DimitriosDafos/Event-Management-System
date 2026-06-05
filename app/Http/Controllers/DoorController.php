@@ -7,8 +7,19 @@ class DoorController extends Controller
 {
     public function store(Request $request, $partyId)
     {
-        $request->validate(['user_id' => 'required|exists:users,id', 'from' => 'required', 'till' => 'required']);
-        DoorAssignment::create(['party_id' => $partyId, 'user_id' => $request->user_id, 'from' => $request->from, 'till' => $request->till]);
+        $request->validate([
+            'user_id'    => 'required|exists:users,id',
+            'sort_order' => 'required|integer|min:1|max:99',
+            'from'       => 'required',
+            'till'       => 'required',
+        ]);
+        DoorAssignment::create([
+            'party_id'   => $partyId,
+            'user_id'    => $request->user_id,
+            'sort_order' => $request->sort_order,
+            'from'       => $request->from,
+            'till'       => $request->till,
+        ]);
         return back()->with('success', 'Einlass-Einteilung gespeichert.');
     }
 

@@ -16,7 +16,7 @@
             <tr>
                 <th style="padding:.75rem 1rem;">Name</th>
                 <th>Benutzername</th>
-                <th>Rolle</th>
+                <th>Gruppen</th>
                 <th>Status</th>
                 <th style="text-align:right; padding:.75rem 1rem;">Aktionen</th>
             </tr>
@@ -27,13 +27,19 @@
                     <td style="padding:.65rem 1rem; font-weight:500;">{{ $user->name }}</td>
                     <td style="color:var(--muted);">@{{ $user->username }}</td>
                     <td>
-                        @if($user->role === 'admin')
-                            <span class="badge badge-gold">Admin</span>
-                        @elseif($user->role === 'marketing')
-                            <span class="badge badge-red">Marketing</span>
-                        @else
-                            <span class="badge badge-muted">Mitglied</span>
-                        @endif
+                        <div style="display:flex; gap:.3rem; flex-wrap:wrap;">
+                            @foreach((array)$user->role as $r)
+                                @if($r === 'admin')
+                                    <span class="badge badge-gold">Admin</span>
+                                @elseif($r === 'marketing')
+                                    <span class="badge badge-red">Marketing</span>
+                                @elseif($r === 'dj')
+                                    <span class="badge" style="background:rgba(80,120,200,.2); color:#7ba8f0; border:1px solid rgba(80,120,200,.4);">DJ</span>
+                                @else
+                                    <span class="badge badge-muted">Mitglied</span>
+                                @endif
+                            @endforeach
+                        </div>
                     </td>
                     <td>
                         @if($user->active)

@@ -15,7 +15,7 @@ class PartyController extends Controller
 
     public function show($id)
     {
-        $party = Party::with(['barShifts.user','doorAssignments.user','djLineup','todos.assignedTo','todos.createdBy','income.createdBy'])->findOrFail($id);
+        $party = Party::with(['barShifts.user','doorAssignments.user','djLineup','todos.users','todos.createdBy','income.createdBy'])->findOrFail($id);
         if ($party->isDraft() && !auth()->user()->isAdmin()) abort(403);
         $users = \App\Models\User::where('active',true)->orderBy('name')->get();
         return view('party.show', compact('party','users'));

@@ -1,58 +1,124 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Event Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A professional event organization and team management platform built for recurring club nights and live events. Designed for promoters, DJs, bar staff and door teams who need a single source of truth for every event.
 
-## About Laravel
+**Live demo:** [webapps.dafos.eu/disclosure](https://webapps.dafos.eu/disclosure)  
+**Stack:** Laravel 12 · PHP 8.4 · MariaDB · Blade · Alpine.js · Tailwind CSS
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Event Planning
+- Create and manage events with title, date, start/end time, location and address
+- Three-stage workflow: **Draft → Published → Past**
+- Mark special events (e.g. anniversary nights) with a highlight flag
+- Upload event flyers (stored via Laravel Storage)
+- Rich description editor per event
 
-## Learning Laravel
+### Public Landing Page
+- Automatically shows the next upcoming published event
+- Displays flyer, date, time, location and DJ line-up to the public
+- No login required for visitors
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### DJ Line-Up Management
+- Assign DJs per event with set times and a drag-friendly sort order
+- Line-up is shown on the public page once the event is published
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Bar Shift Scheduling
+- Assign team members to bar shifts with time slots
+- Sortable shift order within each event
+- At-a-glance overview per event
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+### Door Team Assignment
+- Separate door crew scheduling independent from bar shifts
+- Same sortable, time-slotted structure
 
-## Agentic Development
+### To-Do & Task Tracking
+- Create tasks linked to an event with due date and time
+- Assign multiple team members to a single task
+- Track costs per task (contributes to event expense total)
+- Mark tasks done — with timestamp and user recorded
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### Financial Overview
+- Log income entries per event (description, amount, date)
+- Automatic balance calculation: **Income − Task Costs = Balance**
+- Full audit trail: every income entry records who created it
+
+### Role-Based Access Control
+Four roles with layered permissions:
+
+| Role | Access |
+|---|---|
+| `admin` | Full access — all features, user management |
+| `marketing` | Create & manage events, shifts, todos |
+| `dj` | View events and own line-up slots |
+| `member` | View-only access |
+
+Users can hold multiple roles simultaneously.
+
+### User Management (Admin)
+- Create, edit and deactivate team members
+- Assign one or more roles per user
+- Deactivated users can no longer log in
+
+### Dashboard
+- Quick overview of upcoming events
+- Recent to-do items across all events
+- Direct links to active event detail pages
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Laravel 12 |
+| Language | PHP 8.4 |
+| Database | MariaDB |
+| Frontend | Blade · Alpine.js · Tailwind CSS (CDN) |
+| Auth | Laravel Session Auth (username + password) |
+| File Storage | Laravel Storage (local disk) |
+| Deployment | Nginx · PHP-FPM · Let's Encrypt SSL |
+
+---
+
+## Installation
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/DimitriosDafos/Event-Management-System.git
+cd Event-Management-System
+composer install
+cp .env.example .env
+php artisan key:generate
+# Configure your database in .env
+php artisan migrate
+php artisan db:seed
+php artisan storage:link
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+**Default admin credentials after seeding:**  
+Username: `admin` · Password: `password` — change immediately after first login.
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Environment Variables
 
-## Code of Conduct
+```env
+APP_NAME="Event Management System"
+APP_URL=https://yourdomain.com
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=your_database
+DB_USERNAME=your_user
+DB_PASSWORD=your_password
+```
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Proprietary — © 2026 Dimitrios Dafos. All rights reserved.  
+Not licensed for redistribution or commercial use without written permission.

@@ -11,6 +11,7 @@ use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\AnnouncementController;
+use App\Http\Controllers\BrandingController;
 
 // Öffentliche Seite (kein Login)
 Route::get('/', [PublicController::class, 'index'])->name('public.index');
@@ -82,6 +83,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/mitglieder/{id}/bearbeiten',    [AdminController::class, 'editUser'])->name('users.edit');
         Route::patch('/mitglieder/{id}',             [AdminController::class, 'updateUser'])->name('users.update');
         Route::delete('/mitglieder/{id}',            [AdminController::class, 'deleteUser'])->name('users.delete');
+    });
+
+    // Branding (Admin)
+    Route::middleware('admin')->group(function () {
+        Route::get('/branding',  [BrandingController::class, 'index'])->name('branding.index');
+        Route::patch('/branding', [BrandingController::class, 'update'])->name('branding.update');
     });
 
     // Ankündigungen (Admin)

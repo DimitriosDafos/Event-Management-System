@@ -18,17 +18,23 @@ A professional event organization and team management platform built for recurri
 
 ### Public Landing Page
 - Automatically shows the next upcoming published event
+- When no event is active: shows last past event with a **thank-you message** to attendees
 - Displays flyer, date, time, location and DJ line-up to the public
 - No login required for visitors
 
+### Announcements & News
+- Admins can create free-text announcement blocks (title + body)
+- Shown on the public homepage below the last event
+- Each announcement can be activated/deactivated and ordered independently
+- Full audit trail: records who created each entry
+
 ### DJ Line-Up Management
-- Assign DJs per event with set times and a drag-friendly sort order
+- Assign DJs per event with set times and a sortable order
 - Line-up is shown on the public page once the event is published
 
 ### Bar Shift Scheduling
 - Assign team members to bar shifts with time slots
 - Sortable shift order within each event
-- At-a-glance overview per event
 
 ### Door Team Assignment
 - Separate door crew scheduling independent from bar shifts
@@ -45,13 +51,25 @@ A professional event organization and team management platform built for recurri
 - Automatic balance calculation: **Income − Task Costs = Balance**
 - Full audit trail: every income entry records who created it
 
+### Branding & White-Label
+Customize the public-facing site without touching any code — all via the admin panel:
+
+| Setting | Description |
+|---|---|
+| **Logo** | Upload PNG, JPG, SVG or WebP (transparent background recommended) |
+| **Brand name** | Appears in the header and browser tab |
+| **Tagline** | Short subtitle shown next to the logo |
+| **Footer text** | Bottom line of every public page |
+
+When no logo is uploaded, the brand name is displayed as styled text.
+
 ### Role-Based Access Control
 Four roles with layered permissions:
 
 | Role | Access |
 |---|---|
-| `admin` | Full access — all features, user management |
-| `marketing` | Create & manage events, shifts, todos |
+| `admin` | Full access — all features, user management, branding |
+| `marketing` | Create & manage events, shifts, todos, announcements |
 | `dj` | View events and own line-up slots |
 | `member` | View-only access |
 
@@ -99,6 +117,18 @@ php artisan storage:link
 
 **Default admin credentials after seeding:**  
 Username: `admin` · Password: `password` — change immediately after first login.
+
+---
+
+## Branding Setup
+
+After installation, log in as admin and go to **Admin → Branding & Erscheinungsbild** to:
+
+1. Upload your own logo (PNG or SVG with transparent background recommended)
+2. Set your organization's name and an optional tagline
+3. Customize the footer text
+
+No code changes needed — all branding is managed through the UI and stored in the database.
 
 ---
 

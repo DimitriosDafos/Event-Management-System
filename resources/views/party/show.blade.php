@@ -658,7 +658,7 @@
                     <span style="color:#7ec87e; font-weight:600;">{{ number_format($party->totalIncome(), 2, ',', '.') }} €</span>
                 </div>
 
-                @if(auth()->user()->isAdmin() && $party->isPast())
+                @if(auth()->user()->isAdmin())
                     <div style="border-top:1px solid var(--border); padding-top:.75rem; margin-top:.5rem;">
                         <p style="font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin-bottom:.6rem;">Einnahme eintragen</p>
                         <form method="POST" action="{{ route('income.store', $party->id) }}" style="display:flex; flex-direction:column; gap:.4rem;">
@@ -675,8 +675,6 @@
                             </div>
                         </form>
                     </div>
-                @elseif(auth()->user()->isAdmin() && !$party->isPast())
-                    <p class="text-muted" style="font-size:.75rem; margin-top:.6rem; font-style:italic;">Einnahmen können erst nach der Party eingetragen werden (Status: Vergangen).</p>
                 @endif
             </div>
         </div>

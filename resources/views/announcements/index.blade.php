@@ -20,18 +20,18 @@
         @csrf
         <div>
             <label style="font-size:.78rem; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); margin-bottom:.3rem; display:block;">Titel</label>
-            <input class="input" type="text" name="title" value="{{ old('title') }}" placeholder="z.B. Danke für eure Unterstützung!" required maxlength="200">
+            <input class="form-input" type="text" name="title" value="{{ old('title') }}" placeholder="z.B. Danke für eure Unterstützung!" required maxlength="200">
             @error('title')<p style="color:#e07070; font-size:.78rem; margin-top:.3rem;">{{ $message }}</p>@enderror
         </div>
         <div>
             <label style="font-size:.78rem; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); margin-bottom:.3rem; display:block;">Text</label>
-            <textarea class="input" name="body" rows="5" placeholder="Deine Nachricht an die Community..." required maxlength="5000" style="resize:vertical;">{{ old('body') }}</textarea>
+            <textarea class="form-input" name="body" rows="5" placeholder="Deine Nachricht an die Community..." required maxlength="5000" style="resize:vertical;">{{ old('body') }}</textarea>
             @error('body')<p style="color:#e07070; font-size:.78rem; margin-top:.3rem;">{{ $message }}</p>@enderror
         </div>
         <div style="display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap;">
             <div>
                 <label style="font-size:.78rem; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); margin-bottom:.3rem; display:block;">Reihenfolge</label>
-                <input class="input" type="number" name="sort_order" value="{{ old('sort_order', 0) }}" min="0" style="width:90px;">
+                <input class="form-input" type="number" name="sort_order" value="{{ old('sort_order', 0) }}" min="0" style="width:90px;">
                 <span style="font-size:.72rem; color:var(--muted); display:block; margin-top:.2rem;">0 = ganz oben</span>
             </div>
             <div style="margin-top:1.2rem;">
@@ -50,10 +50,10 @@
             <form method="POST" action="{{ route('announcements.update', $a->id) }}" style="display:flex; flex-direction:column; gap:.75rem;">
                 @csrf @method('PATCH')
                 <div style="display:flex; align-items:center; gap:.75rem; flex-wrap:wrap;">
-                    <input class="input" type="text" name="title" value="{{ $a->title }}" required maxlength="200" style="flex:1; min-width:200px;">
+                    <input class="form-input" type="text" name="title" value="{{ $a->title }}" required maxlength="200" style="flex:1; min-width:200px;">
                     <div style="display:flex; align-items:center; gap:.5rem;">
                         <label style="font-size:.78rem; color:var(--muted); margin:0;">Nr.</label>
-                        <input class="input" type="number" name="sort_order" value="{{ $a->sort_order }}" min="0" style="width:70px; padding:.4rem .6rem;">
+                        <input class="form-input" type="number" name="sort_order" value="{{ $a->sort_order }}" min="0" style="width:70px; padding:.4rem .6rem;">
                     </div>
                     <label style="display:flex; align-items:center; gap:.4rem; cursor:pointer; font-size:.82rem; color:var(--muted);">
                         <input type="hidden" name="active" value="0">
@@ -61,7 +61,7 @@
                         Aktiv
                     </label>
                 </div>
-                <textarea class="input" name="body" rows="4" required maxlength="5000" style="resize:vertical;">{{ $a->body }}</textarea>
+                <textarea class="form-input" name="body" rows="4" required maxlength="5000" style="resize:vertical;">{{ $a->body }}</textarea>
                 <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:.5rem;">
                     <span style="font-size:.72rem; color:var(--muted);">
                         Erstellt {{ $a->created_at->format('d.m.Y') }} · {{ $a->createdBy->name ?? '—' }}

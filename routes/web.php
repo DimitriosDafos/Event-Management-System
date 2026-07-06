@@ -10,6 +10,7 @@ use App\Http\Controllers\TodoController;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\PublicController;
+use App\Http\Controllers\AnnouncementController;
 
 // Öffentliche Seite (kein Login)
 Route::get('/', [PublicController::class, 'index'])->name('public.index');
@@ -81,5 +82,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/mitglieder/{id}/bearbeiten',    [AdminController::class, 'editUser'])->name('users.edit');
         Route::patch('/mitglieder/{id}',             [AdminController::class, 'updateUser'])->name('users.update');
         Route::delete('/mitglieder/{id}',            [AdminController::class, 'deleteUser'])->name('users.delete');
+    });
+
+    // Ankündigungen (Admin)
+    Route::middleware('admin')->group(function () {
+        Route::get('/ankuendigungen',          [AnnouncementController::class, 'index'])->name('announcements.index');
+        Route::post('/ankuendigungen',         [AnnouncementController::class, 'store'])->name('announcements.store');
+        Route::patch('/ankuendigungen/{id}',  [AnnouncementController::class, 'update'])->name('announcements.update');
+        Route::delete('/ankuendigungen/{id}', [AnnouncementController::class, 'destroy'])->name('announcements.destroy');
     });
 });

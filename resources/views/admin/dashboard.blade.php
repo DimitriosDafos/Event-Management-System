@@ -46,5 +46,14 @@
             <a href="{{ route('parties.create') }}" class="btn btn-gold btn-sm">+ Neue Party</a>
         </div>
     </div>
+
+
+    <div class="card" style="margin-top:1rem; grid-column:1/-1;">
+        <h3 class="serif" style="font-size:1rem; color:var(--text); margin-bottom:.75rem;">Ankündigungen &amp; Neuigkeiten</h3>
+        <p class="text-muted" style="font-size:.82rem; margin-bottom:.9rem;">Texte und Danksagungen für die öffentliche Homepage verwalten.</p>
+        <div style="display:flex; gap:.6rem;">
+            <a href="{{ route('announcements.index') }}" class="btn btn-gold btn-sm">Ankündigungen verwalten</a>
+        </div>
+    </div>
 </div>
 @endsection

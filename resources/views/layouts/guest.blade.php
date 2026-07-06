@@ -37,7 +37,7 @@
     <div class="max-w-4xl mx-auto flex items-center justify-between">
         <div>
             <span class="serif font-bold" style="color:var(--gold); font-size:1.4rem; letter-spacing:.05em;">disclosure</span>
-            <span class="text-muted" style="font-size:.72rem; margin-left:.75rem;">by event-tea &middot; Kloster Aachen</span>
+            
         </div>
         <a href="{{ route('login') }}" style="font-size:.78rem; color:var(--muted); text-decoration:none;" class="hover:text-gold">Mitglieder-Login &rarr;</a>
     </div>
@@ -50,9 +50,7 @@
 
 <!-- Footer -->
 <footer style="border-top:1px solid var(--border); margin-top:auto;" class="py-6 text-center">
-    <p style="color:var(--muted); font-size:.72rem; letter-spacing:.03em;">
-        event-tea &middot; Kloster Aachen &middot; gemeinnützig &middot; Kultur von unten
-    </p>
+    <p style="color:var(--muted); font-size:.72rem; letter-spacing:.03em;">event-team &middot; gemeinnützig</p>
 </footer>
 
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>

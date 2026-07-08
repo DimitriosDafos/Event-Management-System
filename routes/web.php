@@ -12,10 +12,13 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\BrandingController;
+use App\Http\Controllers\NewsletterController;
 
 // Öffentliche Seite (kein Login)
 Route::get('/', [PublicController::class, 'index'])->name('public.index');
 Route::get('/party/{id}', [PublicController::class, 'party'])->name('public.party');
+Route::get('/newsletter',  [NewsletterController::class, 'show'])->name('newsletter.show');
+Route::post('/newsletter', [NewsletterController::class, 'store'])->name('newsletter.store');
 
 // Auth
 Route::middleware('guest')->group(function () {
@@ -83,6 +86,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/mitglieder/{id}/bearbeiten',    [AdminController::class, 'editUser'])->name('users.edit');
         Route::patch('/mitglieder/{id}',             [AdminController::class, 'updateUser'])->name('users.update');
         Route::delete('/mitglieder/{id}',            [AdminController::class, 'deleteUser'])->name('users.delete');
+    });
+
+    // Newsletter (Admin)
+    Route::middleware('admin')->group(function () {
+        Route::get('/newsletter/abonnenten',        [NewsletterController::class, 'adminIndex'])->name('newsletter.admin');
+        Route::get('/newsletter/export',            [NewsletterController::class, 'export'])->name('newsletter.export');
+        Route::patch('/newsletter/{id}/toggle',     [NewsletterController::class, 'toggleActive'])->name('newsletter.toggle');
+        Route::delete('/newsletter/{id}',           [NewsletterController::class, 'adminDestroy'])->name('newsletter.destroy');
     });
 
     // Branding (Admin)

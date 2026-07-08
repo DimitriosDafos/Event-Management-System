@@ -57,6 +57,14 @@
     </div>
 
     <div class="card" style="margin-top:1rem; grid-column:1/-1;">
+        <h3 class="serif" style="font-size:1rem; color:var(--text); margin-bottom:.75rem;">Newsletter-Abonnenten</h3>
+        <p class="text-muted" style="font-size:.82rem; margin-bottom:.9rem;">E-Mail-Adressen verwalten und als CSV exportieren.</p>
+        <div style="display:flex; gap:.6rem;">
+            <a href="{{ route('newsletter.admin') }}" class="btn btn-gold btn-sm">Abonnenten anzeigen</a>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:1rem; grid-column:1/-1;">
         <h3 class="serif" style="font-size:1rem; color:var(--text); margin-bottom:.75rem;">Branding &amp; Erscheinungsbild</h3>
         <p class="text-muted" style="font-size:.82rem; margin-bottom:.9rem;">Logo, Markenname, Slogan und Footer-Text der öffentlichen Seite anpassen.</p>
         <div style="display:flex; gap:.6rem;">

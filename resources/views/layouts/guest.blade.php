@@ -58,6 +58,7 @@
 <!-- Footer -->
 <footer style="border-top:1px solid var(--border); margin-top:auto;" class="py-6 text-center">
     <p style="color:var(--muted); font-size:.72rem; letter-spacing:.03em;">{{ \App\Models\Setting::get('footer_text', 'event-team · gemeinnützig') }}</p>
+    <p style="margin-top:.5rem;"><a href="{{ route('newsletter.show') }}" style="font-size:.72rem; color:var(--muted); text-decoration:none; letter-spacing:.03em; transition:color .2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'">Newsletter</a></p>
 </footer>
 
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>

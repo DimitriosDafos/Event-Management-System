@@ -14,9 +14,19 @@
     </div>
 
     @if(session('success'))
-        <div style="background:#1a2e1a; border:1px solid #2d5a2d; border-radius:.5rem; padding:1.1rem 1.4rem; font-size:.9rem; color:#7ec87e; margin-bottom:1.5rem; text-align:center;">
+        <div id="success-msg" style="background:#1a2e1a; border:1px solid #2d5a2d; border-radius:.5rem; padding:1.1rem 1.4rem; font-size:.9rem; color:#7ec87e; margin-bottom:1.5rem; text-align:center;">
             ✓ {{ session('success') }}
+            <p style="margin:.5rem 0 0; font-size:.78rem; color:#5a9a5a;">Du wirst in <span id="countdown">5</span> Sekunden zur Homepage weitergeleitet…</p>
         </div>
+        <script>
+            var sec = 5;
+            var el = document.getElementById('countdown');
+            var timer = setInterval(function() {
+                sec--;
+                if (el) el.textContent = sec;
+                if (sec <= 0) { clearInterval(timer); window.location.href = '{{ url('/') }}'; }
+            }, 1000);
+        </script>
     @endif
 
     @if(session('info'))

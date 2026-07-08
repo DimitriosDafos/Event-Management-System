@@ -57,10 +57,12 @@
     </div>
 
     <div class="card" style="margin-top:1rem; grid-column:1/-1;">
-        <h3 class="serif" style="font-size:1rem; color:var(--text); margin-bottom:.75rem;">Newsletter-Abonnenten</h3>
-        <p class="text-muted" style="font-size:.82rem; margin-bottom:.9rem;">E-Mail-Adressen verwalten und als CSV exportieren.</p>
-        <div style="display:flex; gap:.6rem;">
-            <a href="{{ route('newsletter.admin') }}" class="btn btn-gold btn-sm">Abonnenten anzeigen</a>
+        <h3 class="serif" style="font-size:1rem; color:var(--text); margin-bottom:.75rem;">Newsletter</h3>
+        <p class="text-muted" style="font-size:.82rem; margin-bottom:.9rem;">Newsletter erstellen &amp; versenden, Abonnenten verwalten, Versandhistorie einsehen.</p>
+        <div style="display:flex; gap:.6rem; flex-wrap:wrap;">
+            <a href="{{ route('newsletter.campaigns.create') }}" class="btn btn-gold btn-sm">+ Neuer Newsletter</a>
+            <a href="{{ route('newsletter.campaigns.index') }}" class="btn btn-ghost btn-sm">Versandhistorie</a>
+            <a href="{{ route('newsletter.admin') }}" class="btn btn-ghost btn-sm">Abonnenten</a>
         </div>
     </div>
 

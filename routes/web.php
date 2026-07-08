@@ -13,6 +13,7 @@ use App\Http\Controllers\PublicController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\BrandingController;
 use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\NewsletterCampaignController;
 
 // Öffentliche Seite (kein Login)
 Route::get('/', [PublicController::class, 'index'])->name('public.index');
@@ -94,6 +95,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/newsletter/export',            [NewsletterController::class, 'export'])->name('newsletter.export');
         Route::patch('/newsletter/{id}/toggle',     [NewsletterController::class, 'toggleActive'])->name('newsletter.toggle');
         Route::delete('/newsletter/{id}',           [NewsletterController::class, 'adminDestroy'])->name('newsletter.destroy');
+    });
+
+    // Newsletter-Kampagnen (Admin + Marketing)
+    Route::middleware('marketing')->group(function () {
+        Route::get('/newsletter/kampagnen',       [NewsletterCampaignController::class, 'index'])->name('newsletter.campaigns.index');
+        Route::get('/newsletter/kampagnen/neu',   [NewsletterCampaignController::class, 'create'])->name('newsletter.campaigns.create');
+        Route::post('/newsletter/kampagnen',      [NewsletterCampaignController::class, 'send'])->name('newsletter.campaigns.send');
+        Route::get('/newsletter/kampagnen/{id}',  [NewsletterCampaignController::class, 'show'])->name('newsletter.campaigns.show');
     });
 
     // Branding (Admin)

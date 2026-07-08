@@ -2,6 +2,8 @@
 namespace App\Http\Controllers;
 use App\Models\NewsletterSubscriber;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NewsletterConfirmationMail;
 
 class NewsletterController extends Controller
 {
@@ -39,6 +41,14 @@ class NewsletterController extends Controller
             'ip'     => $request->ip(),
             'active' => true,
         ]);
+
+        try {
+            Mail::to($request->email)
+                ->send(new NewsletterConfirmationMail($request->name ?? ''));
+        } catch (\Exception $e) {
+            // Mail-Fehler soll Anmeldung nicht blockieren
+            \Illuminate\Support\Facades\Log::error('Newsletter-Mail fehlgeschlagen: ' . $e->getMessage());
+        }
 
         return back()->with('success', 'Danke! Du wurdest erfolgreich zum Newsletter angemeldet.');
     }

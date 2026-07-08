@@ -18,15 +18,38 @@ A professional event organization and team management platform built for recurri
 
 ### Public Landing Page
 - Automatically shows the next upcoming published event
-- When no event is active: shows last past event with a **thank-you message** to attendees
-- Displays flyer, date, time, location and DJ line-up to the public
+- When no event is active: displays the last past event with a **thank-you message** to attendees, including the DJ line-up
+- Announcements and news are shown below
 - No login required for visitors
 
 ### Announcements & News
-- Admins can create free-text announcement blocks (title + body)
+- Admins and marketing members can create free-text announcement blocks (title + body)
 - Shown on the public homepage below the last event
-- Each announcement can be activated/deactivated and ordered independently
-- Full audit trail: records who created each entry
+- Each announcement can be activated/deactivated and sorted independently
+- Full audit trail: records who created each entry and when
+
+### Newsletter
+A fully self-hosted newsletter system — no external service required:
+
+**Public sign-up:**
+- Sign-up form linked in the footer of every public page
+- Name (optional) + email address
+- Automatic HTML confirmation email sent on sign-up
+- 5-second success message, then redirect to homepage
+
+**Sending campaigns (Admin & Marketing):**
+- Compose newsletters with subject line and free text
+- Live character counter and **preview** before sending
+- Confirmation dialog showing recipient count before dispatch
+- Sends to all active subscribers via SMTP
+- Each recipient receives a personalized HTML email with the brand name, body text and a footer with unsubscribe notice
+
+**Admin management:**
+- Full subscriber list with search and filter (active / inactive)
+- Activate, deactivate or delete individual subscribers
+- Export all active subscribers as CSV — or select specific ones for export
+- **Send history:** every campaign is stored with subject, body, sender and timestamp
+- **Per-recipient log:** for each campaign, every email address is recorded with delivery status (success / error) and error message if applicable
 
 ### DJ Line-Up Management
 - Assign DJs per event with set times and a sortable order
@@ -52,7 +75,7 @@ A professional event organization and team management platform built for recurri
 - Full audit trail: every income entry records who created it
 
 ### Branding & White-Label
-Customize the public-facing site without touching any code — all via the admin panel:
+Customize the entire public-facing site without touching any code — all managed through the admin panel:
 
 | Setting | Description |
 |---|---|
@@ -61,7 +84,7 @@ Customize the public-facing site without touching any code — all via the admin
 | **Tagline** | Short subtitle shown next to the logo |
 | **Footer text** | Bottom line of every public page |
 
-When no logo is uploaded, the brand name is displayed as styled text.
+Live preview is shown directly on the branding settings page. When no logo is uploaded, the brand name is displayed as styled text.
 
 ### Role-Based Access Control
 Four roles with layered permissions:
@@ -69,7 +92,7 @@ Four roles with layered permissions:
 | Role | Access |
 |---|---|
 | `admin` | Full access — all features, user management, branding |
-| `marketing` | Create & manage events, shifts, todos, announcements |
+| `marketing` | Create & manage events, shifts, todos, announcements, newsletters |
 | `dj` | View events and own line-up slots |
 | `member` | View-only access |
 
@@ -81,9 +104,9 @@ Users can hold multiple roles simultaneously.
 - Deactivated users can no longer log in
 
 ### Dashboard
-- Quick overview of upcoming events
-- Recent to-do items across all events
-- Direct links to active event detail pages
+- Quick overview of upcoming events and recent tasks
+- One-click access to newsletter compose, send history and subscriber list
+- Direct links to branding settings and announcements
 
 ---
 
@@ -97,6 +120,7 @@ Users can hold multiple roles simultaneously.
 | Frontend | Blade · Alpine.js · Tailwind CSS (CDN) |
 | Auth | Laravel Session Auth (username + password) |
 | File Storage | Laravel Storage (local disk) |
+| Email | SMTP (any provider — configured via `.env`) |
 | Deployment | Nginx · PHP-FPM · Let's Encrypt SSL |
 
 ---
@@ -109,7 +133,7 @@ cd Event-Management-System
 composer install
 cp .env.example .env
 php artisan key:generate
-# Configure your database in .env
+# Configure your database and mail settings in .env
 php artisan migrate
 php artisan db:seed
 php artisan storage:link
@@ -120,19 +144,9 @@ Username: `admin` · Password: `password` — change immediately after first log
 
 ---
 
-## Branding Setup
+## Configuration
 
-After installation, log in as admin and go to **Admin → Branding & Erscheinungsbild** to:
-
-1. Upload your own logo (PNG or SVG with transparent background recommended)
-2. Set your organization's name and an optional tagline
-3. Customize the footer text
-
-No code changes needed — all branding is managed through the UI and stored in the database.
-
----
-
-## Environment Variables
+### Database & App
 
 ```env
 APP_NAME="Event Management System"
@@ -145,6 +159,33 @@ DB_DATABASE=your_database
 DB_USERNAME=your_user
 DB_PASSWORD=your_password
 ```
+
+### Email / SMTP
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=mail.yourprovider.com
+MAIL_PORT=587
+MAIL_USERNAME=noreply@yourdomain.com
+MAIL_PASSWORD=your_smtp_password
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=noreply@yourdomain.com
+MAIL_FROM_NAME="${APP_NAME}"
+```
+
+Any SMTP-compatible provider works (e.g. Mailgun, Brevo, your own mail server).
+
+---
+
+## Branding Setup
+
+After installation, log in as admin and navigate to **Admin → Branding & Erscheinungsbild** to:
+
+1. Upload your logo (PNG or SVG with transparent background recommended)
+2. Set your organization name and optional tagline
+3. Customize the footer text
+
+All branding is stored in the database — no code changes required.
 
 ---
 

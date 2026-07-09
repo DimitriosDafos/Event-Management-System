@@ -17,9 +17,9 @@ A professional event organization and team management platform built for recurri
 - Rich description editor per event
 
 ### Public Landing Page
-- Automatically shows the next upcoming published event
-- When no event is active: displays the last past event with a **thank-you message** to attendees, including the DJ line-up
-- Announcements and news are shown below
+- Automatically shows the next upcoming published event with flyer, date, time, location and DJ line-up
+- When no event is active: displays the last past event with a **thank-you message** to attendees including the DJ line-up
+- Announcements and news blocks shown below
 - No login required for visitors
 
 ### Announcements & News
@@ -28,6 +28,22 @@ A professional event organization and team management platform built for recurri
 - Each announcement can be activated/deactivated and sorted independently
 - Full audit trail: records who created each entry and when
 
+### Contact Form
+A built-in contact form linked in the footer of every public page:
+
+- **Fields:** Name (optional), Email (required), Subject (required), Message (required, min. 10 characters)
+- **Security:** CSRF protection, DNS-validated email, `strip_tags()` on all inputs — no HTML or script injection possible
+- **Cancel** button returns to homepage; **Send** button validates, saves and dispatches
+- On success: confirmation message shown on the homepage
+- All messages stored in the database with sender IP and timestamp
+- Notification email sent automatically to the configured contact address (Reply-To set to the sender's email for one-click replies)
+
+**Admin panel:**
+- Red unread badge visible directly in the dashboard header
+- Full message list with sender name, email, subject, date and body
+- **Reply** button opens your email client with pre-filled address and subject
+- Mark as read / unread, delete individual messages
+
 ### Newsletter
 A fully self-hosted newsletter system — no external service required:
 
@@ -35,25 +51,25 @@ A fully self-hosted newsletter system — no external service required:
 - Sign-up form linked in the footer of every public page
 - Name (optional) + email address
 - Automatic HTML confirmation email sent on sign-up
-- 5-second success message, then redirect to homepage
+- 5-second success message, then automatic redirect to homepage
 
 **Sending campaigns (Admin & Marketing):**
 - Compose newsletters with subject line and free text
 - Live character counter and **preview** before sending
 - Confirmation dialog showing recipient count before dispatch
 - Sends to all active subscribers via SMTP
-- Each recipient receives a personalized HTML email with the brand name, body text and a footer with unsubscribe notice
+- Each recipient receives a personalized HTML email with brand name, body text and unsubscribe notice
 
 **Admin management:**
 - Full subscriber list with search and filter (active / inactive)
 - Activate, deactivate or delete individual subscribers
-- Export all active subscribers as CSV — or select specific ones for export
-- **Send history:** every campaign is stored with subject, body, sender and timestamp
-- **Per-recipient log:** for each campaign, every email address is recorded with delivery status (success / error) and error message if applicable
+- Export all active subscribers as CSV — or select specific ones for a targeted export
+- **Send history:** every campaign stored with subject, body, sender and timestamp
+- **Per-recipient log:** for each campaign, every email address recorded with delivery status (success / error message)
 
 ### DJ Line-Up Management
 - Assign DJs per event with set times and a sortable order
-- Line-up is shown on the public page once the event is published
+- Line-up shown on the public page once the event is published
 
 ### Bar Shift Scheduling
 - Assign team members to bar shifts with time slots
@@ -84,14 +100,14 @@ Customize the entire public-facing site without touching any code — all manage
 | **Tagline** | Short subtitle shown next to the logo |
 | **Footer text** | Bottom line of every public page |
 
-Live preview is shown directly on the branding settings page. When no logo is uploaded, the brand name is displayed as styled text.
+Live preview shown directly on the branding settings page. When no logo is uploaded, the brand name is displayed as styled text.
 
 ### Role-Based Access Control
 Four roles with layered permissions:
 
 | Role | Access |
 |---|---|
-| `admin` | Full access — all features, user management, branding |
+| `admin` | Full access — all features, user management, branding, contact messages |
 | `marketing` | Create & manage events, shifts, todos, announcements, newsletters |
 | `dj` | View events and own line-up slots |
 | `member` | View-only access |
@@ -105,8 +121,9 @@ Users can hold multiple roles simultaneously.
 
 ### Dashboard
 - Quick overview of upcoming events and recent tasks
+- **Unread contact message badge** visible at a glance in the header
 - One-click access to newsletter compose, send history and subscriber list
-- Direct links to branding settings and announcements
+- Direct links to branding settings, announcements and contact messages
 
 ---
 
@@ -173,7 +190,15 @@ MAIL_FROM_ADDRESS=noreply@yourdomain.com
 MAIL_FROM_NAME="${APP_NAME}"
 ```
 
-Any SMTP-compatible provider works (e.g. Mailgun, Brevo, your own mail server).
+Any SMTP-compatible provider works (e.g. your own mail server, Brevo, Mailgun).
+
+### Contact Form recipient
+
+Set the email address that receives contact form submissions in `ContactController.php`:
+
+```php
+Mail::to('your-contact@yourdomain.com')->send(new ContactFormMail($contact));
+```
 
 ---
 

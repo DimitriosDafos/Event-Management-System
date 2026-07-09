@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\BrandingController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\NewsletterCampaignController;
 
@@ -19,6 +20,8 @@ use App\Http\Controllers\NewsletterCampaignController;
 Route::get('/', [PublicController::class, 'index'])->name('public.index');
 Route::get('/party/{id}', [PublicController::class, 'party'])->name('public.party');
 Route::get('/newsletter',  [NewsletterController::class, 'show'])->name('newsletter.show');
+Route::get('/kontakt',  [ContactController::class, 'show'])->name('contact.show');
+Route::post('/kontakt', [ContactController::class, 'store'])->name('contact.store');
 Route::post('/newsletter', [NewsletterController::class, 'store'])->name('newsletter.store');
 
 // Auth
@@ -103,6 +106,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/newsletter/kampagnen/neu',   [NewsletterCampaignController::class, 'create'])->name('newsletter.campaigns.create');
         Route::post('/newsletter/kampagnen',      [NewsletterCampaignController::class, 'send'])->name('newsletter.campaigns.send');
         Route::get('/newsletter/kampagnen/{id}',  [NewsletterCampaignController::class, 'show'])->name('newsletter.campaigns.show');
+    });
+
+    // Kontaktnachrichten (Admin)
+    Route::middleware('admin')->group(function () {
+        Route::get('/kontakt/nachrichten',          [ContactController::class, 'adminIndex'])->name('contact.admin');
+        Route::patch('/kontakt/nachrichten/{id}/gelesen',   [ContactController::class, 'markRead'])->name('contact.read');
+        Route::patch('/kontakt/nachrichten/{id}/ungelesen', [ContactController::class, 'markUnread'])->name('contact.unread');
+        Route::delete('/kontakt/nachrichten/{id}',  [ContactController::class, 'adminDestroy'])->name('contact.destroy');
     });
 
     // Branding (Admin)

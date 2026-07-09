@@ -3,7 +3,15 @@
 
 @section('content')
 <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.75rem;">
-    <h1 class="serif" style="font-size:1.3rem; color:var(--gold);">Admin-Bereich</h1>
+    <div style="display:flex; align-items:center; gap:.75rem;">
+        <h1 class="serif" style="font-size:1.3rem; color:var(--gold);">Admin-Bereich</h1>
+        @php $unreadContact = \App\Models\ContactMessage::unread()->count(); @endphp
+        @if($unreadContact > 0)
+            <a href="{{ route('contact.admin') }}" style="background:#c0392b; color:#fff; font-size:.72rem; font-weight:700; padding:.2rem .55rem; border-radius:99px; text-decoration:none;">
+                {{ $unreadContact }} neue Nachricht{{ $unreadContact > 1 ? 'en' : '' }}
+            </a>
+        @endif
+    </div>
 </div>
 
 <!-- Stats -->
@@ -63,6 +71,19 @@
             <a href="{{ route('newsletter.campaigns.create') }}" class="btn btn-gold btn-sm">+ Neuer Newsletter</a>
             <a href="{{ route('newsletter.campaigns.index') }}" class="btn btn-ghost btn-sm">Versandhistorie</a>
             <a href="{{ route('newsletter.admin') }}" class="btn btn-ghost btn-sm">Abonnenten</a>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:1rem; grid-column:1/-1;">
+        <h3 class="serif" style="font-size:1rem; color:var(--text); margin-bottom:.75rem; display:flex; align-items:center; gap:.6rem;">
+            Kontaktnachrichten
+            @if($unreadContact > 0)
+                <span style="background:#c0392b; color:#fff; font-size:.68rem; font-weight:700; padding:.15rem .45rem; border-radius:99px;">{{ $unreadContact }} neu</span>
+            @endif
+        </h3>
+        <p class="text-muted" style="font-size:.82rem; margin-bottom:.9rem;">Nachrichten aus dem öffentlichen Kontaktformular lesen und beantworten.</p>
+        <div style="display:flex; gap:.6rem;">
+            <a href="{{ route('contact.admin') }}" class="btn btn-gold btn-sm">Nachrichten anzeigen</a>
         </div>
     </div>
 

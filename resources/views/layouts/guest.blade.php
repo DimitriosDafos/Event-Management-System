@@ -52,13 +52,18 @@
 
 <!-- Content -->
 <main class="max-w-4xl mx-auto px-6 py-10 w-full">
+    @if(session('contact_success'))
+        <div style="background:#1a2e1a; border:1px solid #2d5a2d; border-radius:.5rem; padding:1rem 1.25rem; font-size:.9rem; color:#7ec87e; margin-bottom:1.5rem; text-align:center; max-width:560px; margin-left:auto; margin-right:auto;">
+            ✓ {{ session('contact_success') }}
+        </div>
+    @endif
     @yield('content')
 </main>
 
 <!-- Footer -->
 <footer style="border-top:1px solid var(--border); margin-top:auto;" class="py-6 text-center">
     <p style="color:var(--muted); font-size:.72rem; letter-spacing:.03em;">{{ \App\Models\Setting::get('footer_text', 'event-team · gemeinnützig') }}</p>
-    <p style="margin-top:.5rem;"><a href="{{ route('newsletter.show') }}" style="font-size:.72rem; color:var(--muted); text-decoration:none; letter-spacing:.03em; transition:color .2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'">Newsletter</a></p>
+    <p style="margin-top:.5rem;"><a href="{{ route('contact.show') }}" style="font-size:.72rem; color:var(--muted); text-decoration:none; letter-spacing:.03em; transition:color .2s; margin-right:.9rem;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'">Kontaktformular</a><a href="{{ route('newsletter.show') }}" style="font-size:.72rem; color:var(--muted); text-decoration:none; letter-spacing:.03em; transition:color .2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'">Newsletter</a></p>
 </footer>
 
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>

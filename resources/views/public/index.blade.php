@@ -7,7 +7,7 @@
     @if($party->flyer_path)
         <div style="text-align:center; margin-bottom:2.5rem;">
             <img src="{{ asset('storage/'.$party->flyer_path) }}" alt="Flyer"
-                 style="max-width:340px; width:100%; border-radius:.5rem; box-shadow:0 8px 40px rgba(0,0,0,.6);">
+                 style="max-width:340px; width:100%; border-radius:.5rem; box-shadow:0 8px 40px rgba(0,0,0,.6); display:block; margin:0 auto;">
         </div>
     @endif
 

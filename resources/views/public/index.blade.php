@@ -16,7 +16,7 @@
         <h1 class="serif" style="font-size:2.2rem; color:var(--gold); margin-bottom:.75rem; line-height:1.2;">{{ $party->title }}</h1>
         <div style="display:inline-flex; flex-wrap:wrap; gap:1.5rem; justify-content:center; font-size:.9rem; color:var(--text); margin-bottom:1rem;">
             <span>📅 {{ $party->date->format('d.m.Y') }}</span>
-            <span>🕙 {{ $party->start_time }} Uhr@if($party->end_time) – {{ $party->end_time }} Uhr@endif</span>
+            <span>🕙 {{ $party->start_time }} Uhr{{ $party->end_time ? " – " . $party->end_time . " Uhr" : "" }}</span>
             @if($party->location)<span>📍 {{ $party->location }}</span>@endif
         </div>
         @if($party->address)
@@ -38,11 +38,11 @@
                     <div style="background:var(--surface); border:1px solid var(--border); border-radius:.375rem; padding:.75rem 1.1rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:.5rem;">
                         <div>
                             <span style="font-weight:600; font-size:.95rem; color:var(--text);">{{ $dj->dj_name }}</span>
-                            @if($dj->style)<span class="text-muted" style="font-size:.78rem; margin-left:.6rem;">{{ $dj->style }}</span>@endif
+                            {!! $dj->style ? '<span class="text-muted" style="font-size:.78rem; margin-left:.6rem;">' . e($dj->style) . '</span>' : "" !!}
                         </div>
                         <div style="display:flex; align-items:center; gap:.75rem;">
                             <span class="text-muted" style="font-size:.82rem;">{{ $dj->from }} – {{ $dj->till }}</span>
-                            @if($dj->website)<a href="{{ $dj->website }}" target="_blank" style="font-size:.75rem; color:var(--gold);">↗</a>@endif
+                            {!! $dj->website ? '<a href="' . e($dj->website) . '" target="_blank" style="font-size:.75rem; color:var(--gold);">↗</a>' : "" !!}
                         </div>
                     </div>
                 @endforeach

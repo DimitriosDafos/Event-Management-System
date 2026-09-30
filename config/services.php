@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+
+    'whatsapp_bot' => [
+        'url' => env('WHATSAPP_BOT_URL', 'http://127.0.0.1:3099'),
+        'token' => env('WHATSAPP_BOT_TOKEN'),
+    ],
+
 ];

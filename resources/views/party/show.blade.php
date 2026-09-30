@@ -577,6 +577,109 @@
     </div>
 </div>
 
+
+{{-- 6. EQUIPMENT-LISTE --}}
+@if(auth()->user()->isAdmin() || auth()->user()->hasRole('marketing'))
+<div x-data="{open:true}" style="margin-bottom:1rem;">
+    <div class="section-header" @click="open=!open">
+        <div style="display:flex; align-items:center; gap:.6rem;">
+            <span style="font-size:1.1rem;">🔌</span>
+            <span class="serif" style="font-size:.95rem; color:var(--text);">Equipment</span>
+            <span class="badge badge-muted">{{ $party->equipment->count() }} Artikel</span>
+        </div>
+        <span x-text="open ? '▲' : '▼'" class="text-muted" style="font-size:.7rem;"></span>
+    </div>
+    <div class="section-body" x-show="open" x-transition>
+
+        @if(session('equipment_success'))
+        <div style="background:rgba(100,200,100,.1); border:1px solid rgba(100,200,100,.3); border-radius:.5rem; padding:.6rem .9rem; margin-bottom:.8rem; font-size:.82rem; color:#7dcf7d;">
+            {{ session('equipment_success') }}
+        </div>
+        @endif
+
+        <div style="overflow-x:auto; margin-bottom:1rem;">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th style="width:38%;">Artikel</th>
+                        <th style="width:10%; text-align:center;">Menge</th>
+                        <th style="width:24%;">Kabeltyp</th>
+                        <th style="width:18%; text-align:right;">Kabellänge</th>
+                        <th style="width:10%;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($party->equipment as $item)
+                    <tr x-data="{editing:false}">
+                        <td x-show="!editing">{{ $item->artikel }}</td>
+                        <td x-show="!editing" style="text-align:center;">{{ $item->menge }}</td>
+                        <td x-show="!editing">{{ $item->kabeltyp ?: '—' }}</td>
+                        <td x-show="!editing" style="text-align:right;">{{ $item->kabellaenge ? number_format($item->kabellaenge, 1, ',', '.') . ' m' : '—' }}</td>
+                        <td x-show="!editing" style="text-align:right; white-space:nowrap;">
+                            <button @click="editing=true" style="background:none; border:none; color:var(--muted); cursor:pointer; font-size:.8rem; padding:.2rem .4rem;" title="Bearbeiten">✏️</button>
+                            <form method="POST" action="{{ route('equipment.destroy', [$party->id, $item->id]) }}" style="display:inline;" onsubmit="return confirm('Artikel entfernen?')">
+                                @csrf @method('DELETE')
+                                <button style="background:none; border:none; color:var(--muted); cursor:pointer; font-size:.8rem; padding:.2rem .4rem;" title="Löschen">🗑</button>
+                            </form>
+                        </td>
+
+                        <td colspan="5" x-show="editing" style="padding:.5rem 0;">
+                            <form method="POST" action="{{ route('equipment.update', [$party->id, $item->id]) }}" style="display:flex; gap:.5rem; flex-wrap:wrap; align-items:flex-end;">
+                                @csrf @method('PATCH')
+                                <input type="text"   name="artikel"     value="{{ $item->artikel }}"    class="form-input" style="width:200px;" placeholder="Artikel" required>
+                                <input type="number" name="menge"       value="{{ $item->menge }}"      class="form-input" style="width:80px;"  placeholder="Menge" min="1" required>
+                                <input type="text"   name="kabeltyp"    value="{{ $item->kabeltyp }}"   class="form-input" style="width:140px;" placeholder="Kabeltyp">
+                                <div style="display:flex; align-items:center; gap:.3rem;">
+                                    <input type="number" name="kabellaenge" value="{{ $item->kabellaenge }}" class="form-input" style="width:90px;" placeholder="Länge" step="0.1" min="0">
+                                    <span class="text-muted" style="font-size:.8rem; white-space:nowrap;">m</span>
+                                </div>
+                                <button type="submit" class="btn btn-gold btn-sm">Speichern</button>
+                                <button type="button" @click="editing=false" class="btn btn-sm" style="border:1px solid var(--border); color:var(--muted);">Abbrechen</button>
+                            </form>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="5" class="text-muted" style="text-align:center; padding:1.2rem; font-size:.85rem;">Noch kein Equipment eingetragen.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        <div style="background:rgba(255,255,255,.03); border:1px solid var(--border); border-radius:.5rem; padding:1rem;">
+            <p style="font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin-bottom:.6rem;">Artikel hinzufügen</p>
+            <form method="POST" action="{{ route('equipment.store', $party->id) }}" style="display:flex; gap:.5rem; flex-wrap:wrap; align-items:flex-end;">
+                @csrf
+                <div>
+                    <label class="form-label">Artikel *</label>
+                    <input type="text" name="artikel" class="form-input" style="width:200px;" placeholder="z.B. XLR-Kabel" required>
+                </div>
+                <div>
+                    <label class="form-label">Menge *</label>
+                    <input type="number" name="menge" class="form-input" style="width:80px;" value="1" min="1" required>
+                </div>
+                <div>
+                    <label class="form-label">Kabeltyp</label>
+                    <input type="text" name="kabeltyp" class="form-input" style="width:140px;" placeholder="z.B. XLR, Cinch">
+                </div>
+                <div>
+                    <label class="form-label">Kabellänge</label>
+                    <div style="display:flex; align-items:center; gap:.3rem;">
+                        <input type="number" name="kabellaenge" class="form-input" style="width:90px;" placeholder="0.0" step="0.1" min="0">
+                        <span class="text-muted" style="font-size:.8rem; white-space:nowrap;">m</span>
+                    </div>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-gold btn-sm" style="margin-top:1.4rem;">+ Hinzufügen</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+@endif
+
 {{-- 5. FINANZEN --}}
 <div x-data="{open:true}" style="margin-bottom:1rem;">
     <div class="section-header" @click="open=!open">

@@ -12,6 +12,7 @@ class Party extends Model
     public function djLineup()       { return $this->hasMany(DjLineup::class)->orderBy('sort_order')->orderBy('from'); }
     public function todos()          { return $this->hasMany(Todo::class)->orderBy('due_date')->orderBy('due_time'); }
     public function income()         { return $this->hasMany(Income::class); }
+    public function equipment()      { return $this->hasMany(Equipment::class)->orderBy('sort_order'); }
 
     public function totalExpenses(): float { return $this->todos()->sum('costs'); }
     public function totalIncome(): float   { return $this->income()->sum('amount'); }

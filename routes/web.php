@@ -15,6 +15,8 @@ use App\Http\Controllers\BrandingController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\NewsletterCampaignController;
+use App\Http\Controllers\Admin\WhatsappController;
+use App\Http\Controllers\EquipmentController;
 
 // Öffentliche Seite (kein Login)
 Route::get('/', [PublicController::class, 'index'])->name('public.index');
@@ -129,4 +131,20 @@ Route::middleware('auth')->group(function () {
         Route::patch('/ankuendigungen/{id}',  [AnnouncementController::class, 'update'])->name('announcements.update');
         Route::delete('/ankuendigungen/{id}', [AnnouncementController::class, 'destroy'])->name('announcements.destroy');
     });
+});
+
+// Equipment (Admin + Marketing)
+Route::middleware(['auth','marketing'])->group(function () {
+    Route::post('/partys/{id}/equipment',              [EquipmentController::class, 'store'])->name('equipment.store');
+    Route::patch('/partys/{id}/equipment/{itemId}',    [EquipmentController::class, 'update'])->name('equipment.update');
+    Route::delete('/partys/{id}/equipment/{itemId}',   [EquipmentController::class, 'destroy'])->name('equipment.destroy');
+});
+
+// WhatsApp Bot (Admin)
+Route::middleware(['auth','admin'])->prefix('admin/whatsapp')->name('admin.whatsapp.')->group(function () {
+    Route::get('/',              [WhatsappController::class, 'index'])->name('index');
+    Route::post('/gruppen',      [WhatsappController::class, 'saveGroups'])->name('saveGroups');
+    Route::post('/compose',      [WhatsappController::class, 'compose'])->name('compose');
+    Route::post('/{id}/approve', [WhatsappController::class, 'approve'])->name('approve');
+    Route::delete('/{id}',       [WhatsappController::class, 'delete'])->name('delete');
 });

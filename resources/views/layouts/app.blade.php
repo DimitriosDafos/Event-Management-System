@@ -9,13 +9,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg:      #0f0d0a;
-            --surface: #1a1510;
-            --border:  #2e2418;
-            --gold:    #d4832a;
-            --red:     #8b3a3a;
-            --text:    #f0e8d8;
-            --muted:   #7a6a54;
+            --bg:      #100e0b;
+            --surface: #211a12;
+            --border:  #3d3020;
+            --gold:    #e09030;
+            --red:     #9e4444;
+            --text:    #f5f0e4;
+            --muted:   #9a8a6e;
         }
         * { box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }

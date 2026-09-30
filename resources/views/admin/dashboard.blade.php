@@ -94,5 +94,13 @@
             <a href="{{ route('branding.index') }}" class="btn btn-gold btn-sm">Branding bearbeiten</a>
         </div>
     </div>
+
+    <div class="card" style="margin-top:1rem; grid-column:1/-1;">
+        <h3 class="serif" style="font-size:1rem; color:var(--text); margin-bottom:.75rem;">WhatsApp Bot</h3>
+        <p class="text-muted" style="font-size:.82rem; margin-bottom:.9rem;">Nachrichten an die WhatsApp-Gemeinschaft senden, Genehmigungen verwalten, Bot-Status einsehen.</p>
+        <div style="display:flex; gap:.6rem;">
+            <a href="{{ route('admin.whatsapp.index') }}" class="btn btn-gold btn-sm">WhatsApp Bot</a>
+        </div>
+    </div>
 </div>
 @endsection
